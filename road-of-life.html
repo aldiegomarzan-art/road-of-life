@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Road of Life — Al Diego</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f0ebe0;
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .poster {
+    width: 780px;
+    background: #faf6ee;
+    border: 2.5px solid #8a7a5a;
+    border-radius: 4px;
+    padding: 32px 36px 40px;
+    position: relative;
+    box-shadow: 6px 6px 0 #c4ae82, 12px 12px 0 #e8d8b0;
+  }
+
+  .poster::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px dashed #c4ae82;
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  .title-area {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .title-top {
+    font-family: 'Caveat', cursive;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: #8a7a5a;
+    text-transform: uppercase;
+  }
+
+  .title-main {
+    font-family: 'Caveat', cursive;
+    font-size: 52px;
+    font-weight: 700;
+    color: #2d4a2d;
+    line-height: 1;
+    margin: 4px 0 2px;
+  }
+
+  .title-sub {
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: #8a7a5a;
+    letter-spacing: 2px;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1.5px;
+    background: repeating-linear-gradient(to right, #8a7a5a 0, #8a7a5a 6px, transparent 6px, transparent 12px);
+  }
+
+  .divider-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #5a8a5a;
+    border: 2px solid #2d4a2d;
+  }
+
+  .map-area {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    overflow: hidden;
+  }
+
+  .info-panel {
+    width: 100%;
+    background: #f0f7e8;
+    border: 1.5px solid #8a7a5a;
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin: 10px 0 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    min-height: 72px;
+    transition: opacity 0.25s ease;
+  }
+
+  .info-panel-left {
+    flex-shrink: 0;
+    text-align: center;
+    min-width: 64px;
+    border-right: 1px dashed #8a7a5a;
+    padding-right: 14px;
+  }
+
+  .info-panel-right {
+    flex: 1;
+  }
+
+  .info-year {
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d6a2d;
+    line-height: 1;
+  }
+
+  .info-title {
+    font-family: 'Caveat', cursive;
+    font-size: 17px;
+    font-weight: 600;
+    color: #2d4a2d;
+    margin: 2px 0 6px;
+    line-height: 1.2;
+  }
+
+  .info-desc {
+    font-size: 11px;
+    color: #6a5a3a;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+
+  .frog-jump {
+    animation: frogJump 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  @keyframes frogJump {
+    0% { transform: translate(0, 0) scale(1); }
+    40% { transform: translate(0, -40px) scale(1.15) rotate(-8deg); }
+    70% { transform: translate(0, -20px) scale(1.05) rotate(4deg); }
+    100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+  }
+
+  .pad-pulse {
+    animation: padPulse 0.4s ease-out;
+  }
+
+  @keyframes padPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+  }
+
+  .lily-pad {
+    cursor: pointer;
+    transition: filter 0.2s;
+  }
+
+  .lily-pad:hover { filter: brightness(1.1); }
+
+  .bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .likes-box, .dislikes-box {
+    border: 1.5px solid #8a7a5a;
+    border-radius: 8px;
+    padding: 16px 18px;
+    position: relative;
+  }
+
+  .likes-box { background: #f0f7e8; }
+  .dislikes-box { background: #fdf0e8; }
+
+  .box-label {
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .likes-box .box-label { color: #2d6a2d; }
+  .dislikes-box .box-label { color: #8a3a1a; }
+
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-family: 'Caveat', cursive;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1.5px solid;
+    letter-spacing: 0.3px;
+  }
+
+  .likes-box .tag {
+    background: #d8efc8;
+    border-color: #5a8a3a;
+    color: #2d5a1a;
+  }
+
+  .dislikes-box .tag {
+    background: #f7dcc8;
+    border-color: #c07040;
+    color: #7a3a10;
+  }
+
+  .footer-note {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Caveat', cursive;
+    font-size: 15px;
+    color: #8a7a5a;
+    letter-spacing: 1px;
+  }
+
+  .corner-deco {
+    position: absolute;
+    font-size: 32px;
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  .bullet-point {
+    display: block;
+    font-size: 11.5px;
+    color: #4a5a3a;
+    line-height: 1.6;
+    padding-left: 14px;
+    position: relative;
+    font-style: normal;
+  }
+  .bullet-point::before {
+    content: '✦';
+    position: absolute;
+    left: 0;
+    color: #7ab04a;
+    font-size: 9px;
+    top: 2px;
+  }
+
+  /* Frog narrator intro overlay */
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    background: #2d4a20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: pointer;
+    transition: opacity 0.8s ease;
+  }
+  .intro-overlay.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .intro-panels {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .intro-panel {
+    width: 320px;
+    background: #faf6ee;
+    border: 2px solid #8a7a5a;
+    padding: 18px 22px;
+    text-align: left;
+    position: relative;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .intro-panel.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .intro-panel-num {
+    font-family: 'Caveat', cursive;
+    font-size: 11px;
+    color: #8a7a5a;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .intro-panel-text {
+    font-family: 'Caveat', cursive;
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d4a1a;
+    line-height: 1.3;
+  }
+  .intro-frog {
+    margin-bottom: 24px;
+    animation: introFrogBob 1.2s ease-in-out infinite alternate;
+  }
+  @keyframes introFrogBob {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-8px); }
+  }
+  .intro-tap-hint {
+    margin-top: 28px;
+    font-family: 'Caveat', cursive;
+    font-size: 15px;
+    color: #a0c870;
+    letter-spacing: 2px;
+    animation: hintPulse 1.5s ease-in-out infinite alternate;
+  }
+  @keyframes hintPulse {
+    from { opacity: 0.5; }
+    to   { opacity: 1; }
+  }
+  .intro-panel-connector {
+    width: 2px;
+    height: 10px;
+    background: #8a7a5a;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+<!-- Frog Narrator Intro Overlay -->
+<div class="intro-overlay" id="introOverlay" onclick="dismissIntro()">
+  <div class="intro-frog">
+    <svg width="72" height="72" viewBox="-24 -24 48 48" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="0" cy="0" rx="18" ry="14" fill="#7ac840"/>
+      <circle cx="-7" cy="-10" r="6" fill="#7ac840"/>
+      <circle cx="7" cy="-10" r="6" fill="#7ac840"/>
+      <circle cx="-7" cy="-10" r="4" fill="#f5f5e0"/>
+      <circle cx="7" cy="-10" r="4" fill="#f5f5e0"/>
+      <circle cx="-7" cy="-10" r="2.5" fill="#1a2a0a"/>
+      <circle cx="7" cy="-10" r="2.5" fill="#1a2a0a"/>
+      <circle cx="-6" cy="-11" r="1" fill="white"/>
+      <circle cx="8" cy="-11" r="1" fill="white"/>
+      <ellipse cx="0" cy="3" rx="12" ry="9" fill="#c8e890"/>
+      <path d="M -5 5 Q 0 9 5 5" fill="none" stroke="#3a6a1a" stroke-width="1.5" stroke-linecap="round"/>
+      <ellipse cx="-16" cy="6" rx="6" ry="4" fill="#7ac840" transform="rotate(-20,-16,6)"/>
+      <ellipse cx="16" cy="6" rx="6" ry="4" fill="#7ac840" transform="rotate(20,16,6)"/>
+      <ellipse cx="-8" cy="10" rx="7" ry="5" fill="#6ab830"/>
+      <ellipse cx="8" cy="10" rx="7" ry="5" fill="#6ab830"/>
+    </svg>
+  </div>
+
+  <div class="intro-panels" id="introPanels">
+    <div class="intro-panel" id="ip0">
+      <div class="intro-panel-num">01</div>
+      <div class="intro-panel-text">"Every frog starts<br>at the edge of one pond..."</div>
+    </div>
+    <div class="intro-panel-connector"></div>
+    <div class="intro-panel" id="ip1">
+      <div class="intro-panel-num">02</div>
+      <div class="intro-panel-text">"...and spends a lifetime<br>leaping toward the next."</div>
+    </div>
+    <div class="intro-panel-connector"></div>
+    <div class="intro-panel" id="ip2">
+      <div class="intro-panel-num">03</div>
+      <div class="intro-panel-text">"Why a frog? Because frogs<br>live between two worlds —<br>and so does Al."</div>
+    </div>
+    <div class="intro-panel-connector"></div>
+    <div class="intro-panel" id="ip3">
+      <div class="intro-panel-num">04</div>
+      <div class="intro-panel-text">"This is the pond of<br><strong>Al Diego.</strong><br>Tap to begin the journey."</div>
+    </div>
+  </div>
+
+  <div class="intro-tap-hint">— tap anywhere to enter —</div>
+</div>
+
+<div class="poster">
+
+  <div class="title-area">
+    <div class="title-top">— A L   D I E G O —</div>
+    <div class="title-main">Road of Life</div>
+    <div class="title-sub">a frog's winding journey thru the pond of time</div>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-dot"></div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="map-area">
+    <svg id="mapSvg" width="100%" height="100%" viewBox="0 0 708 520" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="blur-soft">
+          <feGaussianBlur stdDeviation="2"/>
+        </filter>
+        <filter id="paper">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/>
+          <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+          <feBlend in="SourceGraphic" in2="gray" mode="multiply" result="blend"/>
+          <feComposite in="blend" in2="SourceGraphic" operator="in"/>
+        </filter>
+      </defs>
+
+      <!-- Sky/bg gradient -->
+      <rect width="708" height="520" fill="#e8f4d8" rx="0"/>
+
+      <!-- Distant hills -->
+      <ellipse cx="100" cy="440" rx="160" ry="80" fill="#c8deb0" opacity="0.6"/>
+      <ellipse cx="600" cy="450" rx="140" ry="70" fill="#c8deb0" opacity="0.5"/>
+      <ellipse cx="360" cy="460" rx="200" ry="80" fill="#bdd4a0" opacity="0.5"/>
+
+      <!-- Water / pond area (winding river/path) -->
+      <!-- Main winding water path -->
+      <path d="M 60 480 Q 120 440 100 380 Q 80 320 160 280 Q 240 240 220 180 Q 200 120 280 90 Q 360 60 420 110 Q 480 155 540 140 Q 600 125 660 170" 
+            fill="none" stroke="#7bbcd0" stroke-width="44" stroke-linecap="round" opacity="0.55"/>
+      <!-- Water shimmer -->
+      <path d="M 60 480 Q 120 440 100 380 Q 80 320 160 280 Q 240 240 220 180 Q 200 120 280 90 Q 360 60 420 110 Q 480 155 540 140 Q 600 125 660 170" 
+            fill="none" stroke="#a8d8e8" stroke-width="24" stroke-linecap="round" opacity="0.4"/>
+
+      <!-- Grass patches -->
+      <ellipse cx="340" cy="500" rx="80" ry="18" fill="#6aaa4a" opacity="0.4"/>
+      <ellipse cx="500" cy="490" rx="60" ry="14" fill="#5a9a3a" opacity="0.35"/>
+      <ellipse cx="150" cy="505" rx="70" ry="15" fill="#6aaa4a" opacity="0.4"/>
+
+      <!-- ===== LOTUS FLOWERS ===== -->
+      <!-- Lotus 1 (decorative near bottom right) -->
+      <g transform="translate(595,440)">
+        <ellipse cx="0" cy="0" rx="18" ry="10" fill="#b8e0a0" opacity="0.7"/>
+        <ellipse cx="8" cy="-6" rx="7" ry="12" fill="#f4b8c8" opacity="0.85" transform="rotate(-20)"/>
+        <ellipse cx="-8" cy="-6" rx="7" ry="12" fill="#f4b8c8" opacity="0.85" transform="rotate(20)"/>
+        <ellipse cx="0" cy="-8" rx="6" ry="11" fill="#f9d0dc" opacity="0.9"/>
+        <ellipse cx="0" cy="-4" rx="4" ry="4" fill="#f5e040" opacity="0.9"/>
+      </g>
+
+      <!-- Lotus 2 (decorative top left area) -->
+      <g transform="translate(80,200)">
+        <ellipse cx="0" cy="0" rx="14" ry="8" fill="#b8e0a0" opacity="0.6"/>
+        <ellipse cx="6" cy="-5" rx="5" ry="9" fill="#f4c8d8" opacity="0.8" transform="rotate(-20)"/>
+        <ellipse cx="-6" cy="-5" rx="5" ry="9" fill="#f4c8d8" opacity="0.8" transform="rotate(20)"/>
+        <ellipse cx="0" cy="-6" rx="5" ry="8" fill="#f9dce8" opacity="0.9"/>
+        <ellipse cx="0" cy="-3" rx="3" ry="3" fill="#f0d830" opacity="0.9"/>
+      </g>
+
+      <!-- Lotus 3 (near middle right) -->
+      <g transform="translate(648,285)">
+        <ellipse cx="0" cy="0" rx="16" ry="9" fill="#b8e0a0" opacity="0.6"/>
+        <ellipse cx="7" cy="-5" rx="6" ry="10" fill="#f0b8c0" opacity="0.8" transform="rotate(-20)"/>
+        <ellipse cx="-7" cy="-5" rx="6" ry="10" fill="#f0b8c0" opacity="0.8" transform="rotate(20)"/>
+        <ellipse cx="0" cy="-7" rx="5" ry="10" fill="#f8ccd4" opacity="0.9"/>
+        <ellipse cx="0" cy="-3" rx="3.5" ry="3.5" fill="#f4dc38" opacity="0.9"/>
+      </g>
+
+      <!-- Small reeds / grass tufts -->
+      <g opacity="0.5">
+        <line x1="640" y1="490" x2="635" y2="462" stroke="#5a8a3a" stroke-width="2" stroke-linecap="round"/>
+        <line x1="648" y1="492" x2="645" y2="460" stroke="#5a8a3a" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="635" cy="460" rx="5" ry="8" fill="#8ab050"/>
+        <ellipse cx="645" cy="458" rx="5" ry="8" fill="#8ab050"/>
+      </g>
+      <g opacity="0.5" transform="translate(40, 300)">
+        <line x1="0" y1="30" x2="-2" y2="8" stroke="#5a8a3a" stroke-width="2" stroke-linecap="round"/>
+        <line x1="8" y1="32" x2="7" y2="6" stroke="#5a8a3a" stroke-width="2" stroke-linecap="round"/>
+        <ellipse cx="-2" cy="6" rx="4" ry="7" fill="#8ab050"/>
+        <ellipse cx="7" cy="4" rx="4" ry="7" fill="#8ab050"/>
+      </g>
+
+      <!-- ===== LILY PADS (milestones) ===== -->
+      <!-- pad positions: 8 milestones along the winding path -->
+      <!-- 1: Elyu Origin ~(75, 460) -->
+      <!-- 2: 2012 ~(130, 370) -->
+      <!-- 3: 2015 ~(185, 280) -->
+      <!-- 4: TaskUs 2019 ~(250, 210) -->
+      <!-- 5: Bohol 2021 ~(310, 140) -->
+      <!-- 6: IHG 2022 ~(390, 95) -->
+      <!-- 7: DIACE 2023 ~(470, 118) -->
+      <!-- 8: Alishan 2026 ~(565, 132) -->
+
+      <g id="pads">
+        <!-- PAD 1 -->
+        <g class="lily-pad" onclick="selectMilestone(0)" id="pad0">
+          <ellipse cx="75" cy="462" rx="32" ry="20" fill="#4a9a3a" stroke="#2d6a20" stroke-width="1.5"/>
+          <ellipse cx="75" cy="462" rx="28" ry="17" fill="#5ab04a" opacity="0.5"/>
+          <path d="M75,442 L75,462" stroke="#2d6a20" stroke-width="1" opacity="0.5"/>
+          <path d="M75,462 L58,455" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <path d="M75,462 L90,456" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="75" cy="462" r="4" fill="#8ad860" opacity="0.6"/>
+          <text x="75" y="488" font-family="Caveat, cursive" font-size="11" fill="#2d4a1a" text-anchor="middle" font-weight="600">Elyu</text>
+        </g>
+
+        <!-- PAD 2 -->
+        <g class="lily-pad" onclick="selectMilestone(1)" id="pad1">
+          <ellipse cx="128" cy="368" rx="28" ry="18" fill="#4a9a3a" stroke="#2d6a20" stroke-width="1.5"/>
+          <ellipse cx="128" cy="368" rx="24" ry="14" fill="#5ab04a" opacity="0.5"/>
+          <path d="M128,350 L128,368" stroke="#2d6a20" stroke-width="1" opacity="0.5"/>
+          <path d="M128,368 L113,362" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="128" cy="368" r="3.5" fill="#8ad860" opacity="0.6"/>
+          <text x="128" y="392" font-family="Caveat, cursive" font-size="11" fill="#2d4a1a" text-anchor="middle" font-weight="600">2012</text>
+        </g>
+
+        <!-- PAD 3 -->
+        <g class="lily-pad" onclick="selectMilestone(2)" id="pad2">
+          <ellipse cx="190" cy="278" rx="30" ry="19" fill="#4a9a3a" stroke="#2d6a20" stroke-width="1.5"/>
+          <ellipse cx="190" cy="278" rx="25" ry="15" fill="#5ab04a" opacity="0.5"/>
+          <path d="M190,259 L190,278" stroke="#2d6a20" stroke-width="1" opacity="0.5"/>
+          <path d="M190,278 L174,271" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <path d="M190,278 L204,273" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="190" cy="278" r="3.5" fill="#8ad860" opacity="0.6"/>
+          <text x="190" y="302" font-family="Caveat, cursive" font-size="11" fill="#2d4a1a" text-anchor="middle" font-weight="600">2015</text>
+        </g>
+
+        <!-- PAD 4 -->
+        <g class="lily-pad" onclick="selectMilestone(3)" id="pad3">
+          <ellipse cx="258" cy="205" rx="30" ry="19" fill="#4a9a3a" stroke="#2d6a20" stroke-width="1.5"/>
+          <ellipse cx="258" cy="205" rx="25" ry="15" fill="#5ab04a" opacity="0.5"/>
+          <path d="M258,186 L258,205" stroke="#2d6a20" stroke-width="1" opacity="0.5"/>
+          <path d="M258,205 L242,198" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="258" cy="205" r="3.5" fill="#8ad860" opacity="0.6"/>
+          <text x="258" y="228" font-family="Caveat, cursive" font-size="11" fill="#2d4a1a" text-anchor="middle" font-weight="600">2019</text>
+        </g>
+
+        <!-- PAD 5 -->
+        <g class="lily-pad" onclick="selectMilestone(4)" id="pad4">
+          <ellipse cx="318" cy="138" rx="32" ry="20" fill="#4a9a3a" stroke="#2d6a20" stroke-width="1.5"/>
+          <ellipse cx="318" cy="138" rx="27" ry="16" fill="#5ab04a" opacity="0.5"/>
+          <path d="M318,118 L318,138" stroke="#2d6a20" stroke-width="1" opacity="0.5"/>
+          <path d="M318,138 L302,131" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <path d="M318,138 L332,132" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="318" cy="138" r="4" fill="#8ad860" opacity="0.6"/>
+          <text x="318" y="163" font-family="Caveat, cursive" font-size="11" fill="#2d4a1a" text-anchor="middle" font-weight="600">Bohol 2021</text>
+        </g>
+
+        <!-- PAD 6 -->
+        <g class="lily-pad" onclick="selectMilestone(5)" id="pad5">
+          <ellipse cx="400" cy="100" rx="30" ry="19" fill="#4a9a3a" stroke="#2d6a20" stroke-width="1.5"/>
+          <ellipse cx="400" cy="100" rx="25" ry="15" fill="#5ab04a" opacity="0.5"/>
+          <path d="M400,81 L400,100" stroke="#2d6a20" stroke-width="1" opacity="0.5"/>
+          <path d="M400,100 L384,93" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="400" cy="100" r="3.5" fill="#8ad860" opacity="0.6"/>
+          <text x="400" y="124" font-family="Caveat, cursive" font-size="11" fill="#2d4a1a" text-anchor="middle" font-weight="600">IHG 2022</text>
+        </g>
+
+        <!-- PAD 7 -->
+        <g class="lily-pad" onclick="selectMilestone(6)" id="pad6">
+          <ellipse cx="485" cy="120" rx="30" ry="19" fill="#4a9a3a" stroke="#2d6a20" stroke-width="1.5"/>
+          <ellipse cx="485" cy="120" rx="25" ry="15" fill="#5ab04a" opacity="0.5"/>
+          <path d="M485,101 L485,120" stroke="#2d6a20" stroke-width="1" opacity="0.5"/>
+          <path d="M485,120 L470,113" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <path d="M485,120 L498,114" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="485" cy="120" r="3.5" fill="#8ad860" opacity="0.6"/>
+          <text x="485" y="144" font-family="Caveat, cursive" font-size="11" fill="#2d4a1a" text-anchor="middle" font-weight="600">DIACE 2023</text>
+        </g>
+
+        <!-- PAD 8 (current/star pad) -->
+        <g class="lily-pad" onclick="selectMilestone(7)" id="pad7">
+          <ellipse cx="580" cy="138" rx="36" ry="22" fill="#5ab04a" stroke="#2d8a20" stroke-width="2"/>
+          <ellipse cx="580" cy="138" rx="30" ry="18" fill="#6acc50" opacity="0.5"/>
+          <path d="M580,116 L580,138" stroke="#2d6a20" stroke-width="1.2" opacity="0.5"/>
+          <path d="M580,138 L562,130" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <path d="M580,138 L596,132" stroke="#2d6a20" stroke-width="0.8" opacity="0.4"/>
+          <!-- Star on this pad -->
+          <text x="580" y="143" font-size="14" text-anchor="middle" fill="#f5c832" font-family="serif">★</text>
+          <text x="580" y="165" font-family="Caveat, cursive" font-size="11" fill="#2d4a1a" text-anchor="middle" font-weight="700">Alishan 2026</text>
+        </g>
+      </g>
+
+      <!-- ===== FROG ===== -->
+      <g id="frog" transform="translate(75,437)">
+        <!-- Frog body -->
+        <ellipse cx="0" cy="0" rx="18" ry="14" fill="#7ac840"/>
+        <!-- Eyes -->
+        <circle cx="-7" cy="-10" r="6" fill="#7ac840"/>
+        <circle cx="7" cy="-10" r="6" fill="#7ac840"/>
+        <circle cx="-7" cy="-10" r="4" fill="#f5f5e0"/>
+        <circle cx="7" cy="-10" r="4" fill="#f5f5e0"/>
+        <circle cx="-7" cy="-10" r="2.5" fill="#1a2a0a"/>
+        <circle cx="7" cy="-10" r="2.5" fill="#1a2a0a"/>
+        <circle cx="-6" cy="-11" r="1" fill="white"/>
+        <circle cx="8" cy="-11" r="1" fill="white"/>
+        <!-- Belly -->
+        <ellipse cx="0" cy="3" rx="12" ry="9" fill="#c8e890"/>
+        <!-- Smile -->
+        <path d="M -5 5 Q 0 9 5 5" fill="none" stroke="#3a6a1a" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Front legs -->
+        <ellipse cx="-16" cy="6" rx="6" ry="4" fill="#7ac840" transform="rotate(-20,-16,6)"/>
+        <ellipse cx="16" cy="6" rx="6" ry="4" fill="#7ac840" transform="rotate(20,16,6)"/>
+        <!-- Back bumps -->
+        <ellipse cx="-8" cy="10" rx="7" ry="5" fill="#6ab830"/>
+        <ellipse cx="8" cy="10" rx="7" ry="5" fill="#6ab830"/>
+        <!-- Nostrils -->
+        <circle cx="-3" cy="-3" r="1" fill="#3a6a1a" opacity="0.6"/>
+        <circle cx="3" cy="-3" r="1" fill="#3a6a1a" opacity="0.6"/>
+      </g>
+
+      <!-- Ripple effect (hidden by default) -->
+      <g id="ripple" opacity="0">
+        <circle id="ripple1" r="10" fill="none" stroke="#7bbcd0" stroke-width="1.5" opacity="0.8"/>
+        <circle id="ripple2" r="18" fill="none" stroke="#7bbcd0" stroke-width="1" opacity="0.5"/>
+        <circle id="ripple3" r="26" fill="none" stroke="#7bbcd0" stroke-width="0.5" opacity="0.3"/>
+      </g>
+
+      <!-- Small bubbles/dots on water -->
+      <circle cx="155" cy="320" r="2.5" fill="#a8d8e8" opacity="0.6"/>
+      <circle cx="230" cy="220" r="2" fill="#a8d8e8" opacity="0.5"/>
+      <circle cx="350" cy="110" r="2" fill="#a8d8e8" opacity="0.5"/>
+      <circle cx="440" cy="108" r="1.5" fill="#a8d8e8" opacity="0.4"/>
+
+      <!-- ===== Path connecting dots hint ===== -->
+      <path d="M75,462 Q100,415 128,368 Q158,318 190,278 Q224,238 258,205 Q288,170 318,138 Q358,116 400,100 Q442,86 485,120 Q530,148 580,138"
+            fill="none" stroke="#5a8a5a" stroke-width="1.5" stroke-dasharray="5,8" opacity="0.35"/>
+
+      <!-- Compass rose (cute) -->
+      <g transform="translate(672, 460)">
+        <circle cx="0" cy="0" r="18" fill="#fffef5" stroke="#8a7a5a" stroke-width="1"/>
+        <text x="0" y="-6" font-family="Caveat, cursive" font-size="9" fill="#2d4a2d" text-anchor="middle">N</text>
+        <text x="0" y="14" font-family="Caveat, cursive" font-size="9" fill="#2d4a2d" text-anchor="middle">S</text>
+        <text x="-13" y="4" font-family="Caveat, cursive" font-size="9" fill="#2d4a2d" text-anchor="middle">W</text>
+        <text x="13" y="4" font-family="Caveat, cursive" font-size="9" fill="#2d4a2d" text-anchor="middle">E</text>
+        <polygon points="0,-12 3,-4 -3,-4" fill="#c84a2a"/>
+        <polygon points="0,12 3,4 -3,4" fill="#888"/>
+      </g>
+
+      <!-- "click a pad" hint -->
+      <text x="354" y="340" font-family="Caveat, cursive" font-size="13" fill="#5a8a5a" text-anchor="middle" opacity="0.7" transform="rotate(-15,354,340)">tap a lily pad!</text>
+      <path d="M354,345 Q345,360 335,368" fill="none" stroke="#5a8a5a" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arr2)" opacity="0.5"/>
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M2 2L8 5L2 8" fill="none" stroke="#5a8a5a" stroke-width="1.5" stroke-linecap="round"/>
+        </marker>
+      </defs>
+    </svg>
+
+  </div>
+
+  <!-- Info Panel — sits below the map, no overlap -->
+  <div class="info-panel" id="infoPanel">
+    <div class="info-panel-left">
+      <div class="info-year" id="infoYear">Home</div>
+    </div>
+    <div class="info-panel-right">
+      <div class="info-title" id="infoTitle">La Union — Elyu</div>
+      <div class="info-desc" id="infoDesc">Where the journey began. The Surfing Capital of the North — sun, waves, and the salty breeze of home. Born and raised on this beautiful coast.</div>
+    </div>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-dot" style="background:#c07040; border-color:#7a3a10;"></div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="bottom-section">
+    <div class="likes-box">
+      <div class="box-label">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2d6a2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        Things I Like
+      </div>
+      <div class="tag-cloud">
+        <span class="tag">Coffee &amp; Tea</span>
+        <span class="tag">Sleeping</span>
+        <span class="tag">Driving to clear my head</span>
+        <span class="tag">Beach vibes</span>
+        <span class="tag">Serenity</span>
+        <span class="tag">Solo travel</span>
+        <span class="tag">New cultures</span>
+        <span class="tag">Anime</span>
+        <span class="tag">Learning new things</span>
+      </div>
+    </div>
+
+    <div class="dislikes-box">
+      <div class="box-label">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8a3a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+        Not a Fan Of
+      </div>
+      <div class="tag-cloud">
+        <span class="tag">Crowded places</span>
+        <span class="tag">Hot weather (ironic lol)</span>
+        <span class="tag">Pushed narratives</span>
+        <span class="tag">Time-wasters</span>
+        <span class="tag">Unnecessary drama</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    "every lily pad is a leap of faith — keep jumping, Al!" &nbsp; ✦ &nbsp; 2026
+  </div>
+
+</div>
+
+<script>
+const milestones = [
+  { year: "Home", title: "La Union — Elyu", emoji: "🌊",
+    points: ["Born & raised in the Surfing Capital of the North", "Salt air, pine trees, and the Ilocos wind as a daily soundtrack", "Elyu shaped the quiet, grounded side — loves the beach but hates the heat. Classic.", "Home base. Always the starting pad, always the one to return to."],
+    cx: 75, cy: 437 },
+  { year: "2012", title: "The Year That Wasn't", emoji: "🌀",
+    points: ["The world was supposed to end. It didn't. (Awkward.)", "That existential plot twist made life feel a little more precious", "Learned early: panic is overrated, curiosity is underrated", "The frog looked at the empty pond... and decided to keep hopping anyway."],
+    cx: 128, cy: 343 },
+  { year: "2015", title: "First Job — Data Encoder", emoji: "⌨️",
+    points: ["Clocked in, clocked out, clocked in again — the humble grind begins", "Learned the value of accuracy, patience, and strong coffee", "Every expert was once a beginner staring at a blank spreadsheet", "The first lily pad is always the wobbliest. You jump anyway."],
+    cx: 190, cy: 253 },
+  { year: "2019", title: "Joined TaskUs", emoji: "📞",
+    points: ["A bigger pond, a bigger leap — and it paid off", "New industry, new skills, new circle of people who push you forward", "Discovered a knack for fast-paced environments and problem-solving under pressure", "The frog grew legs here. Real ones."],
+    cx: 258, cy: 180 },
+  { year: "2021", title: "Bohol & Typhoon Odette", emoji: "🌪️",
+    points: ["Thought this chapter might close permanently. It did not.", "Odette was one of the strongest typhoons to hit the Philippines that year", "Survived. Rebuilt. Reflected. Remembered what actually matters.", "Some pads get swept away — you float until you find the next one."],
+    cx: 318, cy: 113 },
+  { year: "Mar 2022", title: "IHG — A New Chapter", emoji: "🏨",
+    points: ["Crossed into hospitality — a completely different kind of pond", "Started fresh in March 2022 with curiosity and zero ego about being new", "Proved that skills transfer; industry is just the water you swim in", "The frog in a hotel lobby. Surprisingly graceful."],
+    cx: 400, cy: 75 },
+  { year: "Jun 2023", title: "DIACE Pioneer", emoji: "🚀",
+    points: ["Part of the very first batch of the DIACE campaign — pioneer status earned", "Being a pioneer means no map, no guide, just instinct and grit", "Helped build something from scratch that others would later benefit from", "The frog who didn't wait for the path — it made one."],
+    cx: 485, cy: 95 },
+  { year: "2026", title: "Alishan Adventure", emoji: "🏔️",
+    points: ["High-altitude forests, ancient cypress trees, and cloud-sea views in Taiwan", "A reminder that the world is wide and still full of first times", "Solo travel mode: ON. Serenity found at 2,400 meters above sea level.", "The latest pad. Definitely not the last. Looking forward to new travels!"],
+    cx: 580, cy: 113 },
+];
+
+let currentPad = 0;
+let isJumping = false;
+
+const frogEl = document.getElementById('frog');
+const infoYear = document.getElementById('infoYear');
+const infoTitle = document.getElementById('infoTitle');
+const infoDesc = document.getElementById('infoDesc');
+const rippleEl = document.getElementById('ripple');
+const ripple1 = document.getElementById('ripple1');
+const ripple2 = document.getElementById('ripple2');
+const ripple3 = document.getElementById('ripple3');
+
+function showRipple(cx, cy) {
+  rippleEl.setAttribute('transform', `translate(${cx},${cy})`);
+  rippleEl.setAttribute('opacity', '1');
+  let r1 = 6, r2 = 12, r3 = 18;
+  let op1 = 0.9, op2 = 0.6, op3 = 0.35;
+  const rippleAnim = setInterval(() => {
+    r1 += 1.5; r2 += 1.5; r3 += 1.5;
+    op1 -= 0.05; op2 -= 0.04; op3 -= 0.03;
+    ripple1.setAttribute('r', r1); ripple1.setAttribute('opacity', Math.max(0, op1));
+    ripple2.setAttribute('r', r2); ripple2.setAttribute('opacity', Math.max(0, op2));
+    ripple3.setAttribute('r', r3); ripple3.setAttribute('opacity', Math.max(0, op3));
+    if (r1 > 40) {
+      clearInterval(rippleAnim);
+      rippleEl.setAttribute('opacity', '0');
+    }
+  }, 30);
+}
+
+function selectMilestone(idx) {
+  if (isJumping || idx === currentPad) return;
+  isJumping = true;
+
+  const prev = milestones[currentPad];
+  const next = milestones[idx];
+
+  // Show old pad ripple
+  showRipple(prev.cx, prev.cy + 25);
+
+  // Get SVG dimensions for scaling
+  const svgEl = document.getElementById('mapSvg');
+  const viewBox = { w: 708, h: 520 };
+  const rect = svgEl.getBoundingClientRect();
+  const scaleX = rect.width / viewBox.w;
+  const scaleY = rect.height / viewBox.h;
+
+  // Animate frog: jump up then to destination
+  const startX = prev.cx;
+  const startY = prev.cy;
+  const endX = next.cx;
+  const endY = next.cy;
+
+  const steps = 30;
+  let step = 0;
+
+  const jumpAnim = setInterval(() => {
+    step++;
+    const t = step / steps;
+    // Bezier-like: arc up in the middle
+    const arcHeight = Math.abs(endX - startX) * 0.3 + 20;
+    const x = startX + (endX - startX) * t;
+    const y = startY + (endY - startY) * t - Math.sin(Math.PI * t) * arcHeight;
+    const scale = 1 + Math.sin(Math.PI * t) * 0.15;
+    const rot = (endX > startX ? 1 : -1) * Math.sin(Math.PI * t) * 12;
+
+    frogEl.setAttribute('transform', `translate(${x},${y}) scale(${scale}) rotate(${rot})`);
+
+    if (step >= steps) {
+      clearInterval(jumpAnim);
+      frogEl.setAttribute('transform', `translate(${endX},${endY})`);
+
+      // Ripple on landing
+      showRipple(endX, endY + 25);
+
+      // Pulse pad
+      const padEl = document.getElementById('pad' + idx);
+      padEl.classList.add('pad-pulse');
+      setTimeout(() => padEl.classList.remove('pad-pulse'), 400);
+
+      isJumping = false;
+      currentPad = idx;
+    }
+  }, 18);
+
+  // Update info panel
+  infoYear.textContent = next.year;
+  infoTitle.textContent = next.emoji + '  ' + next.title;
+  infoDesc.innerHTML = next.points.map(p => `<span class="bullet-point">${p}</span>`).join('');
+}
+
+// Intro overlay animation
+(function() {
+  const panels = ['ip0','ip1','ip2','ip3'];
+  panels.forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('visible');
+    }, 400 + i * 600);
+  });
+})();
+
+function dismissIntro() {
+  const overlay = document.getElementById('introOverlay');
+  overlay.classList.add('fade-out');
+  setTimeout(() => overlay.style.display = 'none', 800);
+}
+
+// Init frog position and info panel
+frogEl.setAttribute('transform', `translate(${milestones[0].cx},${milestones[0].cy})`);
+const m0 = milestones[0];
+infoYear.textContent = m0.year;
+infoTitle.textContent = m0.emoji + '  ' + m0.title;
+infoDesc.innerHTML = m0.points.map(p => `<span class="bullet-point">${p}</span>`).join('');
+</script>
+
+</body>
+</html>
